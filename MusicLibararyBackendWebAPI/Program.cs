@@ -17,7 +17,7 @@ namespace MusicLibararyBackendWebAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var connectionstring = builder.Configuration.GetConnectionString("DefautlConnection")
+            var connectionstring = builder.Configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseMySQL(connectionstring, b => b.MigrationsAssembly(typeof
