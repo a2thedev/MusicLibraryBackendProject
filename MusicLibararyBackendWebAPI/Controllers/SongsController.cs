@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MusicLibararyBackendWebAPI.Data;
 using MusicLibararyBackendWebAPI.Models;
 using System.ComponentModel.DataAnnotations;
@@ -29,7 +30,7 @@ namespace MusicLibararyBackendWebAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var song = _context.Songs.Find();
+            var song = _context.Songs.Find(id);
             if (song == null)
             {
                 return NotFound();
@@ -41,21 +42,36 @@ namespace MusicLibararyBackendWebAPI.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Song song)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 _context.Songs.Add(song);
                 _context.SaveChanges();
                 return StatusCode(201, song);
-            }
-            return BadRequest(ModelState);
+            //}
+            //return BadRequest(ModelState);
         }
 
         // PUT api/<SongsController>/5
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Song song)
         {
-            var songs = _context.Songs.Update;
-            return Ok(songs);
+            var existingSong = _context.Songs.FirstOrDefault(s => s.Id == id);
+            if (existingSong == null)
+            {
+                return NotFound(id);
+            }
+            else
+
+            {
+                existingSong.Title = song.Title;
+                existingSong.Artist = song.Artist;
+                existingSong.Album = song.Album;
+                existingSong.ReleaseDate = song.ReleaseDate;
+                existingSong.Genre = song.Genre;
+
+                _context.SaveChanges();
+                return StatusCode(200, song);
+            }
         }
 
         // DELETE api/<SongsController>/5
